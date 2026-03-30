@@ -1,82 +1,78 @@
 
+
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:test_payment_with_getaways/Features/checkout/data/model/stripe_input_model.dart';
 import 'package:test_payment_with_getaways/Features/checkout/data/model/stripe_retern_model/stripe_retern_model.dart';
-import 'package:test_payment_with_getaways/core/utils/api_constants.dart';
+import 'package:test_payment_with_getaways/core/api_keys/api_keys.dart';
+import 'package:test_payment_with_getaways/core/errors/failures.dart';
 import 'package:test_payment_with_getaways/core/utils/api_service.dart';
 
 class StripeService {
-  final ApiService api;
 
-  static const String baseUrl = ApiConstants.baseUrl;
+  ApiService api ;
+  
+   StripeService(this.api);
+  
+  Future<String> createPaymentIntent(StripeInputModel stripeInputModel) async {
+  final response = await api.post(
+    contentType: Headers.formUrlEncodedContentType,
+    url: '/create-payment-intent',
+    body: stripeInputModel.toJson(),
+  );
 
-  StripeService(this.api);
+  final clientSecret = response.data['client_secret'];
+ print("FULL RESPONSE: ${response.data}");
 
-  Future<StripeReturnModel> createPaymentIntent(StripeInputModel stripeInputModel) async {
-    try {
-      final response = await api.post(
-        url: '$baseUrl/create-payment-intent',
-        body: stripeInputModel.toJson(),
-      );
-      
-      if (response.data == null) {
-        throw Exception('Server returned empty response');
-      }
-
-      final responseModel = StripeReturnModel.fromJson(response.data);
-      
-      if (responseModel.clientSecret == null) {
-        throw Exception('No client_secret found in server response');
-      }
-
-      return responseModel;
-    } catch (e) {
-      rethrow;
-    }
+  if (clientSecret == null) {
+    throw Exception("client_secret is null → check backend response");
   }
+
+  return clientSecret;
+}
+
 
   Future<void> initPaymentSheet({required String paymentIntentClientSecret}) async {
-    try {
-      await Stripe.instance.initPaymentSheet(
-        paymentSheetParameters: SetupPaymentSheetParameters(
-          paymentIntentClientSecret: paymentIntentClientSecret,
-          merchantDisplayName: 'Ali Magdy Store',
-          style: ThemeMode.light,
-        ),
-      );
-    } catch (e) {
-      rethrow;
-    }
+  try {
+
+
+
+    // 3. Initialize the payment sheet
+    await Stripe.instance.initPaymentSheet(
+      paymentSheetParameters: SetupPaymentSheetParameters(
+        // Main params
+        paymentIntentClientSecret: paymentIntentClientSecret,
+        merchantDisplayName: 'Ali magdy Store Demo',
+      ),
+    );
+  } catch (e) {
+   rethrow;
   }
+}
+
 
   Future<void> presentPaymentSheet() async {
-    try {
-      await Stripe.instance.presentPaymentSheet();
-    } catch (e) {
-      rethrow;
-    }
+  try {
+    // 4. Display the payment sheet
+    await Stripe.instance.presentPaymentSheet();
+  } catch (e) {
+    rethrow;
   }
+}
 
-  Future<void> processPayment(StripeInputModel stripeInputModel) async {
-    try {
-      // 1. Backend call
-      final responseModel = await createPaymentIntent(stripeInputModel);
+Future<void> processPayment(StripeInputModel stripeInputModel) async {
+  try {
+    final clientSecret = await createPaymentIntent(stripeInputModel);
 
-      // 2. Initialize
-      await initPaymentSheet(paymentIntentClientSecret: responseModel.clientSecret!);
+    await initPaymentSheet(
+      paymentIntentClientSecret: clientSecret,
+    );
 
-      // 3. Present
-      await presentPaymentSheet();
-    } on StripeException catch (e) {
-      // HANDLE CANCELLATION EXPLICITLY
-      if (e.error.code == FailureCode.Canceled) {
-        throw Exception('UserCanceled');
-      }
-      throw Exception(e.error.localizedMessage ?? 'Stripe error');
-    } catch (e) {
-      rethrow;
-    }
+    await presentPaymentSheet();
+  } catch (e) {
+    print("Payment Error: $e");
+    rethrow;
   }
-}
+}
+}

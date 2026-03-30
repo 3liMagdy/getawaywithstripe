@@ -1,10 +1,10 @@
+require('dotenv').config();
+
+console.log("KEY:", process.env.STRIPE_SECRET_KEY);
+
 const express = require("express");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const cors = require("cors");
-const dotenv = require("dotenv");
-
-// Load .env variables
-dotenv.config();
 
 const app = express();
 const stripeInstance = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -12,6 +12,7 @@ const stripeInstance = require("stripe")(process.env.STRIPE_SECRET_KEY);
 // Middleware
 app.use(cors()); // Allow requests from Flutter app (even during local testing)
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /**
  * Route: POST /create-payment-intent
@@ -41,12 +42,13 @@ app.post("/create-payment-intent", async (req, res) => {
       },
       payment_method_types: ["card"], // Only cards for now
     });
-
+    console.log("PaymentIntent:", paymentIntent);
     // 3. Return the client_secret to the Flutter mobile app
     res.status(200).json({
       client_secret: paymentIntent.client_secret,
     });
   } catch (error) {
+
     console.error("Stripe Error:", error.message);
     res.status(500).json({ error: error.message });
   }
