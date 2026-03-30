@@ -1,6 +1,6 @@
 class StripeInputModel {
   final String currency;
-  final int amount; // Amount must be an integer (in cents, e.g., 5097 for $50.97)
+  final int amount; 
 
   StripeInputModel({required this.currency, required this.amount});
 
