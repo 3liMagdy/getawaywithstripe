@@ -18,10 +18,13 @@ class CheckoutRepoImpl implements CheckoutRepo {
   @override
   Future<Either<Failure, void>> makePayment({required StripeInputModel stripeInputModel}) async {
     try {
-    await  stripeService.processPayment(stripeInputModel);
+      await stripeService.processPayment(stripeInputModel);
       return right(null);
     } catch (e) {
-      return Left(ServerFailure(e.toString()));
+      if (e.toString().contains('UserCanceled')) {
+        return left(const UserCanceledFailure());
+      }
+      return left(ServerFailure(e.toString()));
     }
   }
 

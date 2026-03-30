@@ -23,12 +23,7 @@ class CheckoutApp extends StatelessWidget {
   }
 }
 
-//create payment intent(currency, amount)
-//init payment sheet
-//present payment sheet
-// create input model and return model
-//create wrapper for server 
-//create api service  with dio
+
 
 
 

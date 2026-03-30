@@ -13,3 +13,5 @@ final class PayMentFailure extends PayMentState {
   final String errMessage;
   PayMentFailure(this.errMessage);
 }
+
+final class PayMentCancel extends PayMentState {}

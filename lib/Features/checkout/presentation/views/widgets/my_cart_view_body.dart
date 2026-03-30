@@ -46,11 +46,14 @@ class MyCartViewBody extends StatelessWidget {
                 builder: (context) {
                   return BlocProvider(
                     create: (context) => getIt<PayMentCubit>(),
-                    child: PaymentMethodsBottomSheet(stripeIntent: StripeInputModel(
-                      amount:  r'$50.97',
-                      currency: 'USD',
-                      
-                    )),
+                    child: PaymentMethodsBottomSheet(
+                      stripeIntent: StripeInputModel(
+                        // Stripe expects amount in cents as an INTEGER.
+                        // $50.97 -> 50.97 * 100 = 5097
+                        amount: 5097, 
+                        currency: 'USD',
+                      ),
+                    ),
                   );
                 },
               );

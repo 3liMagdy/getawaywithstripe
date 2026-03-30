@@ -1,18 +1,40 @@
-
-
 import 'package:dio/dio.dart';
 
 class ApiService {
- final  Dio _dio = Dio();
-  
-  Future<Response>post({required  body, required String url, required String token,String? contentType}) async {
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: "https://sweet-plants-shop.loca.lt", 
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      headers: {
+        "Accept": "application/json",
+      },
+    ),
+  );
+
+  Future<Response> post({
+    required Object body,
+    required String url,
+    Map<String, String>? headers,
+    String? contentType,
+  }) async {
     try {
       final response = await _dio.post(
-        url, data: body, options: Options(headers: {'Authorization': 'Bearer $token'}, contentType: contentType));
+        url, 
+        data: body,
+        options: Options(
+          headers: {
+            ...?_dio.options.headers,
+            ...?headers,
+          },
+          contentType: contentType,
+        ),
+      );
       return response;
-    } catch (e) {
+    } on DioException catch (e) {
+      print(" Dio Error: ${e.message}");
+      print(" Response: ${e.response?.data}");
       rethrow;
     }
   }
-
 }

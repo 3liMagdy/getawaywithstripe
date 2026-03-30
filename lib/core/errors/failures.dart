@@ -30,3 +30,11 @@ class ServerFailure extends Failure {
     }
   }
 }
+
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.errMessage);
+}
+
+class UserCanceledFailure extends Failure {
+  const UserCanceledFailure() : super('Payment Canceled');
+}
