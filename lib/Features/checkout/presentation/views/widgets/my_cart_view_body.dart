@@ -50,8 +50,9 @@ class MyCartViewBody extends StatelessWidget {
                       stripeIntent: StripeInputModel(
                         // Stripe expects amount in cents as an INTEGER.
                         // $50.97 -> 50.97 * 100 = 5097
-                        amount: 5097, 
+                        amount: 5097,
                         currency: 'USD',
+                        customer: 'cus_UFmgiKDptU9kmq',
                       ),
                     ),
                   );

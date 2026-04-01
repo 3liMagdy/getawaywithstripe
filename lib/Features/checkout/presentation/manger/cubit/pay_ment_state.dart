@@ -6,9 +6,9 @@ abstract class PayMentState {}
 final class PayMentInitial extends PayMentState {}
 
 final class PayMentLoading extends PayMentState {}
-final class PayMentSuccess extends PayMentState {
 
-}
+final class PayMentSuccess extends PayMentState {}
+
 final class PayMentFailure extends PayMentState {
   final String errMessage;
   PayMentFailure(this.errMessage);

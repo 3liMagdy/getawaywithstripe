@@ -1,5 +1,3 @@
-
-
 import 'package:get_it/get_it.dart';
 import 'package:test_payment_with_getaways/Features/checkout/data/repo/repo_impl.dart';
 import 'package:test_payment_with_getaways/Features/checkout/domain/repo/repo.dart';
@@ -12,8 +10,16 @@ final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<ApiService>(() => ApiService());
-  getIt.registerLazySingleton<StripeService>(() => StripeService(getIt<ApiService>()));
-  getIt.registerLazySingleton<CheckoutRepo>(() => CheckoutRepoImpl(getIt<StripeService>()));
-  getIt.registerLazySingleton<ManageCartUseCase>(() => ManageCartUseCase(repo: getIt<CheckoutRepo>()));
-  getIt.registerLazySingleton<PayMentCubit>(() => PayMentCubit(manageCartUseCase: getIt<ManageCartUseCase>()));
+  getIt.registerLazySingleton<StripeService>(
+    () => StripeService(getIt<ApiService>()),
+  );
+  getIt.registerLazySingleton<CheckoutRepo>(
+    () => CheckoutRepoImpl(getIt<StripeService>()),
+  );
+  getIt.registerLazySingleton<ManageCartUseCase>(
+    () => ManageCartUseCase(repo: getIt<CheckoutRepo>()),
+  );
+  getIt.registerLazySingleton<PayMentCubit>(
+    () => PayMentCubit(manageCartUseCase: getIt<ManageCartUseCase>()),
+  );
 }

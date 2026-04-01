@@ -42,7 +42,9 @@ class CustomBlocConsumerButton extends StatelessWidget {
           onTap: () {
             // 2. Prevent multiple taps
             if (state is! PayMentLoading) {
-              context.read<PayMentCubit>().checkOut(stripeInputModel: stripeIntent);
+              context.read<PayMentCubit>().checkOut(
+                stripeInputModel: stripeIntent,
+              );
             }
           },
         );

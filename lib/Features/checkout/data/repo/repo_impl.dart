@@ -1,7 +1,3 @@
-
-
-
-
 import 'package:dartz/dartz.dart';
 import 'package:test_payment_with_getaways/Features/checkout/data/model/stripe_input_model.dart';
 import 'package:test_payment_with_getaways/Features/checkout/data/model/stripe_retern_model/stripe_retern_model.dart';
@@ -13,10 +9,11 @@ class CheckoutRepoImpl implements CheckoutRepo {
   final StripeService stripeService;
 
   CheckoutRepoImpl(this.stripeService);
- 
-  
+
   @override
-  Future<Either<Failure, void>> makePayment({required StripeInputModel stripeInputModel}) async {
+  Future<Either<Failure, void>> makePayment({
+    required StripeInputModel stripeInputModel,
+  }) async {
     try {
       await stripeService.processPayment(stripeInputModel);
       return right(null);
@@ -27,6 +24,4 @@ class CheckoutRepoImpl implements CheckoutRepo {
       return left(ServerFailure(e.toString()));
     }
   }
-
- 
 }

@@ -3,12 +3,10 @@ import 'package:dio/dio.dart';
 class ApiService {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: "https://getawaywithstripe-production.up.railway.app", 
+      baseUrl: "https://getawaywithstripe-production.up.railway.app",
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
-      headers: {
-        "Accept": "application/json",
-      },
+      headers: {"Accept": "application/json"},
     ),
   );
 
@@ -20,13 +18,10 @@ class ApiService {
   }) async {
     try {
       final response = await _dio.post(
-        url, 
+        url,
         data: body,
         options: Options(
-          headers: {
-            ...?_dio.options.headers,
-            ...?headers,
-          },
+          headers: {...?_dio.options.headers, ...?headers},
           contentType: contentType,
         ),
       );

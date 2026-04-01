@@ -17,7 +17,9 @@ class PayMentCubit extends Cubit<PayMentState> {
     emit(PayMentLoading());
 
     try {
-      final result = await manageCartUseCase.makePayment(stripeInputModel: stripeInputModel);
+      final result = await manageCartUseCase.makePayment(
+        stripeInputModel: stripeInputModel,
+      );
 
       // 2. Fold response from Dartz (Clean Architecture Result)
       result.fold(

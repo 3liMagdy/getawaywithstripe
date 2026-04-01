@@ -3,7 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:test_payment_with_getaways/core/utils/styles.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({super.key, this.onTap, this.isLoiding = false, required this.text});
+  const CustomButton({
+    super.key,
+    this.onTap,
+    this.isLoiding = false,
+    required this.text,
+  });
 
   final void Function()? onTap;
   final bool isLoiding;
@@ -22,7 +27,9 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         child: Center(
-          child:isLoiding ? const CircularProgressIndicator(color: Colors.white,) : Text(text, textAlign: TextAlign.center, style: Styles.style22),
+          child: isLoiding
+              ? const CircularProgressIndicator(color: Colors.white)
+              : Text(text, textAlign: TextAlign.center, style: Styles.style22),
         ),
       ),
     );
