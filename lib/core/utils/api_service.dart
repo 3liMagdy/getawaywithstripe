@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 class ApiService {
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: "https://robt-unkinglike-insipidly.ngrok-free.dev", 
+      baseUrl: "https://getawaywithstripe-production.up.railway.app", 
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
       headers: {
