@@ -23,7 +23,7 @@ class StripeService {
   );
 
   final clientSecret = response.data['client_secret'];
- print("FULL RESPONSE: ${response.data}");
+
 
   if (clientSecret == null) {
     throw Exception("client_secret is null → check backend response");
