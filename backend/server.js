@@ -49,6 +49,7 @@ app.post("/create-payment-intent", async (req, res) => {
       currency,
       customer: customerId,
       payment_method_types: ["card"],
+       setup_future_usage: "off_session", 
     });
 
     res.status(200).json({

@@ -27,19 +27,23 @@ class PayMentCubit extends Cubit<PayMentState> {
           if (!isClosed) {
             if (failure is UserCanceledFailure) {
               emit(PayMentCancel());
+              emit(PayMentInitial()); // Reset to initial after cancellation
             } else {
               emit(PayMentFailure(failure.errMessage));
+               emit(PayMentInitial()); 
             }
           }
         },
         (_) {
           if (!isClosed) emit(PayMentSuccess());
+           emit(PayMentInitial()); 
         },
       );
     } catch (e) {
       // 3. Robust Error Handling: Ensure we don't emit after cubit is closed
       if (!isClosed) {
         emit(PayMentFailure(e.toString().replaceAll('Exception: ', '')));
+         emit(PayMentInitial()); 
       }
     }
   }
