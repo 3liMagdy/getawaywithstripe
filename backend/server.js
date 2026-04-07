@@ -28,7 +28,7 @@ app.post("/ephemeral-key", async (req, res) => {
 
     const ephemeralKey = await stripe.ephemeralKeys.create(
       { customer: customerId },
-      { apiVersion: "2023-10-16" }
+      { apiVersion: "2024-04-10"}
     );
 
     res.json(ephemeralKey);
