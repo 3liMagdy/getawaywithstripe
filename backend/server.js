@@ -8,6 +8,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.post("/create-customer", async (req, res) => {
   try {
@@ -39,17 +40,20 @@ app.post("/ephemeral-key", async (req, res) => {
 
 app.post("/create-payment-intent", async (req, res) => {
   try {
+    const { amount, currency, customerId } = req.body;
 
-    const amount = 1000; // ثابت (مثال)
-    const currency = "usd";
-    const { customerId } = req.body;
+    if (!amount || !currency || !customerId) {
+      return res.status(400).json({
+        error: 'Missing required fields: amount, currency, customerId',
+      });
+    }
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
       customer: customerId,
       payment_method_types: ["card"],
-       setup_future_usage: "off_session", 
+      setup_future_usage: "off_session",
     });
 
     res.status(200).json({

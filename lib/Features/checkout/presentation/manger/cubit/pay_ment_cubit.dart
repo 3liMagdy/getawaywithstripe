@@ -11,7 +11,6 @@ class PayMentCubit extends Cubit<PayMentState> {
 
   Future<void> checkOut({required StripeInputModel stripeInputModel}) async {
     if (isClosed) return;
-    // 1. Prevent double emission or multiple requests if UI didn't disable button
     if (state is PayMentLoading) return;
 
     emit(PayMentLoading());
@@ -21,30 +20,30 @@ class PayMentCubit extends Cubit<PayMentState> {
         stripeInputModel: stripeInputModel,
       );
 
-      // 2. Fold response from Dartz (Clean Architecture Result)
       result.fold(
         (failure) {
           if (!isClosed) {
             if (failure is UserCanceledFailure) {
               emit(PayMentCancel());
-              emit(PayMentInitial()); // Reset to initial after cancellation
             } else {
               emit(PayMentFailure(failure.errMessage));
-               emit(PayMentInitial()); 
             }
           }
         },
         (_) {
           if (!isClosed) emit(PayMentSuccess());
-           emit(PayMentInitial()); 
         },
       );
     } catch (e) {
-      // 3. Robust Error Handling: Ensure we don't emit after cubit is closed
       if (!isClosed) {
         emit(PayMentFailure(e.toString().replaceAll('Exception: ', '')));
-         emit(PayMentInitial()); 
       }
+    }
+  }
+
+  void reset() {
+    if (!isClosed) {
+      emit(PayMentInitial());
     }
   }
 
@@ -55,5 +54,4 @@ class PayMentCubit extends Cubit<PayMentState> {
   }
 }
 
-// Helper to make debugPrint available if not imported
 void debugPrint(String message) => print(message);

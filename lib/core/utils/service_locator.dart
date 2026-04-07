@@ -19,7 +19,7 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<ManageCartUseCase>(
     () => ManageCartUseCase(repo: getIt<CheckoutRepo>()),
   );
-  getIt.registerLazySingleton<PayMentCubit>(
+  getIt.registerFactory<PayMentCubit>(
     () => PayMentCubit(manageCartUseCase: getIt<ManageCartUseCase>()),
   );
 }

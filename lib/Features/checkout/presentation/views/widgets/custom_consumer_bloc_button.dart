@@ -15,16 +15,17 @@ class CustomBlocConsumerButton extends StatelessWidget {
     return BlocConsumer<PayMentCubit, PayMentState>(
       listener: (context, state) {
         if (state is PayMentSuccess) {
-          // Navigate to success screen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const ThankYouView()),
-          );
-        } else if (state is PayMentCancel) {
-          // Simply close the bottom sheet on cancellation
           Navigator.of(context).pop();
+          Future.microtask(() {
+            Navigator.of(context, rootNavigator: true).pushReplacement(
+              MaterialPageRoute(builder: (_) => const ThankYouView()),
+            );
+          });
+          context.read<PayMentCubit>().reset();
+        } else if (state is PayMentCancel) {
+          Navigator.of(context).pop();
+          context.read<PayMentCubit>().reset();
         } else if (state is PayMentFailure) {
-          // Only show error snackbar for REAL failures
           Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -32,6 +33,7 @@ class CustomBlocConsumerButton extends StatelessWidget {
               backgroundColor: Colors.red,
             ),
           );
+          context.read<PayMentCubit>().reset();
         }
       },
       builder: (context, state) {
@@ -45,6 +47,7 @@ class CustomBlocConsumerButton extends StatelessWidget {
               context.read<PayMentCubit>().checkOut(
                 stripeInputModel: stripeIntent,
               );
+
             }
           },
         );
